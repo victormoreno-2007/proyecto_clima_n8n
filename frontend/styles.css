@@ -1,0 +1,375 @@
+/* =============================================
+   Variables y Reset
+============================================= */
+:root {
+  --bg: #080c14;
+  --surface: rgba(255, 255, 255, 0.04);
+  --surface-hover: rgba(255, 255, 255, 0.07);
+  --border: rgba(255, 255, 255, 0.08);
+  --accent: #4af0c4;
+  --accent-2: #4a8ff0;
+  --accent-warm: #f0a84a;
+  --text-primary: #f0f4ff;
+  --text-secondary: rgba(240, 244, 255, 0.5);
+  --danger: #f06a4a;
+  --radius: 20px;
+  --radius-sm: 12px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text-primary);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 20px;
+  overflow-x: hidden;
+}
+
+/* =============================================
+   Orbs de fondo animados
+============================================= */
+.bg-orbs { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.15;
+  animation: floatOrb 12s ease-in-out infinite;
+}
+.orb-1 { width: 500px; height: 500px; background: var(--accent-2); top: -150px; left: -100px; }
+.orb-2 { width: 400px; height: 400px; background: var(--accent); bottom: -100px; right: -80px; animation-delay: -4s; }
+.orb-3 { width: 300px; height: 300px; background: var(--accent-warm); top: 50%; left: 50%; transform: translate(-50%,-50%); opacity: 0.07; animation-delay: -8s; }
+
+@keyframes floatOrb {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50%       { transform: translateY(-30px) scale(1.05); }
+}
+
+/* =============================================
+   Layout
+============================================= */
+.container {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* =============================================
+   Header
+============================================= */
+.header { text-align: center; animation: fadeDown 0.6s ease both; }
+
+.logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+.logo-icon { font-size: 2rem; }
+.logo-text {
+  font-family: 'Syne', sans-serif;
+  font-size: 2rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.tagline { font-size: 0.875rem; color: var(--text-secondary); font-weight: 300; letter-spacing: 0.05em; }
+
+/* =============================================
+   Formulario
+============================================= */
+.form-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px;
+  backdrop-filter: blur(16px);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  animation: fadeUp 0.6s ease 0.1s both;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.field { display: flex; flex-direction: column; gap: 8px; }
+
+.field label {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.field input {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  color: var(--text-primary);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.field input:focus {
+  border-color: var(--accent);
+  background: rgba(74, 240, 196, 0.04);
+}
+
+.field input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(0.6);
+  cursor: pointer;
+}
+
+/* Transport */
+.transport-options { display: flex; gap: 8px; }
+
+.transport-btn {
+  flex: 1;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 6px;
+  color: var(--text-secondary);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+}
+
+.transport-btn:hover { border-color: var(--accent); color: var(--accent); }
+.transport-btn.selected {
+  background: rgba(74, 240, 196, 0.1);
+  border-color: var(--accent);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* Submit */
+.submit-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 14px;
+  color: #080c14;
+  font-family: 'Syne', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.2s;
+  width: 100%;
+}
+.submit-btn:hover { opacity: 0.9; transform: scale(1.01); }
+.submit-btn:active { transform: scale(0.98); }
+.btn-arrow { transition: transform 0.2s; }
+.submit-btn:hover .btn-arrow { transform: translateX(4px); }
+
+/* Error */
+.error-msg {
+  font-size: 0.85rem;
+  color: var(--danger);
+  padding: 10px 14px;
+  background: rgba(240, 106, 74, 0.08);
+  border: 1px solid rgba(240, 106, 74, 0.2);
+  border-radius: var(--radius-sm);
+}
+
+/* =============================================
+   Loading
+============================================= */
+.loading-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  animation: fadeUp 0.4s ease both;
+}
+
+.spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* =============================================
+   Resultado
+============================================= */
+.result-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  animation: fadeUp 0.5s ease both;
+}
+
+/* Meta badges (origen → destino, fecha, transporte) */
+.result-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.meta-badge {
+  font-size: 0.82rem;
+  font-weight: 500;
+  padding: 5px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.origin-badge {
+  border-color: rgba(74, 240, 196, 0.3);
+  color: var(--accent);
+  background: rgba(74, 240, 196, 0.07);
+}
+
+.dest-badge {
+  border-color: rgba(74, 143, 240, 0.3);
+  color: var(--accent-2);
+  background: rgba(74, 143, 240, 0.07);
+}
+
+.date-badge {
+  border-color: rgba(240, 168, 74, 0.3);
+  color: var(--accent-warm);
+  background: rgba(240, 168, 74, 0.07);
+}
+
+.transport-badge {
+  border-color: rgba(255, 255, 255, 0.15);
+  color: var(--text-secondary);
+  background: var(--surface);
+}
+
+.arrow-divider {
+  color: var(--text-secondary);
+  font-size: 1rem;
+}
+
+/* Caja de recomendación del AI */
+.recommendation-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  backdrop-filter: blur(16px);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.rec-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* El AI devuelve HTML con <b> tags */
+.rec-text {
+  font-size: 1rem;
+  line-height: 1.75;
+  color: var(--text-primary);
+}
+
+.rec-text b {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* Reset */
+.reset-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  color: var(--text-secondary);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  width: 100%;
+}
+.reset-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(74, 240, 196, 0.05);
+}
+
+/* =============================================
+   Footer
+============================================= */
+.footer {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: 12px;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  opacity: 0.5;
+}
+
+/* =============================================
+   Utilidades
+============================================= */
+.hidden { display: none !important; }
+
+@keyframes fadeDown {
+  from { opacity: 0; transform: translateY(-16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* =============================================
+   Responsive
+============================================= */
+@media (max-width: 520px) {
+  .form-grid { grid-template-columns: 1fr; }
+
+  .result-meta { flex-direction: column; align-items: flex-start; }
+  .arrow-divider { display: none; }
+
+  .logo-text { font-size: 1.6rem; }
+}

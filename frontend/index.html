@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ClimaVest — Asistente de viaje</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <div class="bg-orbs">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <main class="container">
+
+    <header class="header">
+      <div class="logo">
+        <span class="logo-icon">🗺️</span>
+        <span class="logo-text">ClimaVest</span>
+      </div>
+      <p class="tagline">Planea tu viaje · Viste inteligente</p>
+    </header>
+
+    <!-- FORMULARIO -->
+    <section class="form-section">
+      <div class="form-grid">
+
+        <div class="field">
+          <label for="originInput">📍 Lugar de origen</label>
+          <input type="text" id="originInput" placeholder="Ej: Cúcuta" autocomplete="off"/>
+        </div>
+
+        <div class="field">
+          <label for="destinationInput">🏁 Lugar de destino</label>
+          <input type="text" id="destinationInput" placeholder="Ej: Bogotá" autocomplete="off"/>
+        </div>
+
+        <div class="field">
+          <label for="dateInput">📅 Fecha del viaje</label>
+          <input type="date" id="dateInput"/>
+        </div>
+
+        <div class="field">
+          <label>🚗 Medio de transporte</label>
+          <div class="transport-options">
+            <button class="transport-btn" data-value="carro" onclick="selectTransport(this)">🚗 Carro</button>
+            <button class="transport-btn" data-value="moto" onclick="selectTransport(this)">🏍️ Moto</button>
+            <button class="transport-btn" data-value="a pie" onclick="selectTransport(this)">🚶 A pie</button>
+          </div>
+        </div>
+
+      </div>
+
+      <div id="errorMsg" class="error-msg hidden"></div>
+
+      <button class="submit-btn" onclick="consultWeather()">
+        <span>Consultar clima del viaje</span>
+        <span class="btn-arrow">→</span>
+      </button>
+    </section>
+
+    <!-- LOADING -->
+    <section id="loading" class="loading-section hidden">
+      <div class="spinner"></div>
+      <p>Consultando el clima de tu ruta...</p>
+    </section>
+
+    <!-- RESULTADO -->
+    <section id="result" class="result-section hidden">
+
+      <div class="result-meta">
+        <span id="originName" class="meta-badge origin-badge"></span>
+        <span class="arrow-divider">→</span>
+        <span id="destName" class="meta-badge dest-badge"></span>
+        <span id="travelDate" class="meta-badge date-badge"></span>
+        <span id="transportBadge" class="meta-badge transport-badge"></span>
+      </div>
+
+      <div class="recommendation-box">
+        <div class="rec-label">
+          <span>🤖</span>
+          <span>Reporte de tu copiloto IA</span>
+        </div>
+        <div id="recommendation" class="rec-text"></div>
+      </div>
+
+      <button class="reset-btn" onclick="resetForm()">
+        Consultar otro viaje
+      </button>
+
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <p>Datos en tiempo real · Historial guardado automáticamente</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

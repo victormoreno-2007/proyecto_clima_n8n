@@ -1,0 +1,16 @@
+{
+  "name": "mcp-server",
+  "version": "1.0.0",
+  "description": "MCP Server para asistente de vestimenta por clima",
+  "main": "src/server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "node-fetch": "^3.3.2"
+  }
+}
