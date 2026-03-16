@@ -1,0 +1,737 @@
+{
+  "name": "Proyecto IA",
+  "nodes": [
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "6106f67d-ab63-4efb-b912-ff2ead1a672a",
+              "name": "Lugar de origen",
+              "value": "={{ $json.body['Lugar de origen'] }}",
+              "type": "string"
+            },
+            {
+              "id": "db1e8800-130a-4fc3-9e96-8e8b56f41b7c",
+              "name": "Destino",
+              "value": "={{ $json.body.Destino }}",
+              "type": "string"
+            },
+            {
+              "id": "e73063bb-a90b-49f3-b2a0-533c386c7562",
+              "name": "Dia de viaje",
+              "value": "={{ $json.body['Dia de viaje'] }}",
+              "type": "string"
+            },
+            {
+              "id": "2977e8c7-df2d-4a54-9608-2df8528ab852",
+              "name": "Metodo de transporte",
+              "value": "={{ $json.body['Metodo de transporte'] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        48,
+        -16
+      ],
+      "id": "b491031f-61b3-4652-863d-e064f6a7bfa4",
+      "name": "Nombrar variables"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Nombrar variables').item.json['Metodo de transporte'] }}",
+                    "rightValue": "Carro",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "00cd86a6-6777-46d6-acc0-b3ab3d451b2d"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "0db3721b-1ced-4978-bd97-405d7bcfa533",
+                    "leftValue": "={{ $('Nombrar variables').item.json['Metodo de transporte'] }}",
+                    "rightValue": "Moto",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "281cfe6b-8dd0-41dc-a85e-62edf65b5f7a",
+                    "leftValue": "={{ $('Nombrar variables').item.json['Metodo de transporte'] }}",
+                    "rightValue": "A pie",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        688,
+        -48
+      ],
+      "id": "c6e3103a-fdd3-4e14-b999-23e4b2df9638",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openrouteservice.org/v2/directions/driving-car/geojson",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "eyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6IjIyYzQ3ZmE2ZjIxMjRjM2Y4Zjk1ZGIwNmVjYmYwZTMyIiwiaCI6Im11cm11cjY0In0="
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"coordinates\": [\n      [\n        {{ $('Obtener origen').item.json.features[0].geometry.coordinates[0] }},\n        {{ $('Obtener origen').item.json.features[0].geometry.coordinates[1] }}\n      ],\n      [\n        {{ $('Obtener destino').item.json.features[0].geometry.coordinates[0] }},\n        {{ $('Obtener destino').item.json.features[0].geometry.coordinates[1] }}\n      ]\n    ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        912,
+        -256
+      ],
+      "id": "5badf6a2-2834-4c81-b588-c36866c1e141",
+      "name": "Obtener Ruta Carro"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openrouteservice.org/v2/directions/cycling-regular/geojson",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "eyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6IjIyYzQ3ZmE2ZjIxMjRjM2Y4Zjk1ZGIwNmVjYmYwZTMyIiwiaCI6Im11cm11cjY0In0="
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"coordinates\": [\n      [\n        {{ $('Obtener origen').item.json.features[0].geometry.coordinates[0] }},\n        {{ $('Obtener origen').item.json.features[0].geometry.coordinates[1] }}\n      ],\n      [\n        {{ $('Obtener destino').item.json.features[0].geometry.coordinates[0] }},\n        {{ $('Obtener destino').item.json.features[0].geometry.coordinates[1] }}\n      ]\n    ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        928,
+        -48
+      ],
+      "id": "085fd2a7-d979-4ba8-ad8f-5737dbdb1166",
+      "name": "Obtener Ruta Moto"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openrouteservice.org/v2/directions/foot-walking/geojson",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "eyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6IjIyYzQ3ZmE2ZjIxMjRjM2Y4Zjk1ZGIwNmVjYmYwZTMyIiwiaCI6Im11cm11cjY0In0="
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"coordinates\": [\n      [\n        {{ $('Obtener origen').item.json.features[0].geometry.coordinates[0] }},\n        {{ $('Obtener origen').item.json.features[0].geometry.coordinates[1] }}\n      ],\n      [\n        {{ $('Obtener destino').item.json.features[0].geometry.coordinates[0] }},\n        {{ $('Obtener destino').item.json.features[0].geometry.coordinates[1] }}\n      ]\n    ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        944,
+        128
+      ],
+      "id": "89e96d41-30a4-40dc-97f8-61aa34ea0ea2",
+      "name": "Obtener Ruta A pie"
+    },
+    {
+      "parameters": {
+        "url": "https://api.openrouteservice.org/geocode/search",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "text",
+              "value": "={{ $json['Lugar de origen'] }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "eyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6IjIyYzQ3ZmE2ZjIxMjRjM2Y4Zjk1ZGIwNmVjYmYwZTMyIiwiaCI6Im11cm11cjY0In0="
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        272,
+        -144
+      ],
+      "id": "fbd40e7b-4c3d-4d62-b4d2-c74dd32d5462",
+      "name": "Obtener origen"
+    },
+    {
+      "parameters": {
+        "url": "https://api.openrouteservice.org/geocode/search",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "text",
+              "value": "={{ $json.Destino }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "eyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6IjIyYzQ3ZmE2ZjIxMjRjM2Y4Zjk1ZGIwNmVjYmYwZTMyIiwiaCI6Im11cm11cjY0In0="
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        272,
+        32
+      ],
+      "id": "d32749e9-1408-461e-974b-ec55073c2b64",
+      "name": "Obtener destino"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        496,
+        -32
+      ],
+      "id": "2aed3877-b089-48c7-ab68-ad81bb069b35",
+      "name": "Unir obtención de coordenadas"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        1440,
+        -64
+      ],
+      "id": "91bc050a-cb98-4e80-a684-d6e3a2acb9e8",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "url": "=https://api.open-meteo.com/v1/forecast?latitude={{ $json.latitud }}&longitude={{ $json.longitud }}&current_weather=true",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1712,
+        -48
+      ],
+      "id": "01804778-18b3-41ec-ba0f-96b7a2f53bed",
+      "name": "Consultar clima individual"
+    },
+    {
+      "parameters": {
+        "model": "llama3:latest",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        2160,
+        -48
+      ],
+      "id": "fe047702-039a-492d-9e0c-6e519ce28526",
+      "name": "Ollama Chat Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "vlQ6itwUgXkWvTsn",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "Eres un carismático y experto copiloto de viajes. Tu trabajo es analizar el clima de una ruta por carretera y entregar un reporte ágil, útil y con excelente vibra.\n\nCONTEXTO QUE RECIBIRÁS:\n- Hora local (para saludar correctamente: Buenos días, tardes o noches).\n- Nombre del conductor.\n- Lista de temperaturas en la ruta (Punto 1 es Origen -> Punto 5 es Destino).\n- Lista de códigos meteorológicos WMO.\n\nTRADUCCIÓN DE CLIMA Y LÓGICA DE RECOMENDACIONES (ESTRICTO):\n- Si hay 0 (Despejado ☀️): Sugiere gafas de sol, protector solar o usar el aire acondicionado.\n- Si hay 1, 2, 3 (Nublado ⛅): Sugiere ropa cómoda, destaca que es un clima agradable para manejar sin deslumbramientos.\n- Si hay 45, 48 (Niebla 🌫️): ADVERTENCIA. Pide encender luces exploradoras/bajas, reducir velocidad y aumentar distancia.\n- Si hay 51 a 65 (Lluvia 🌧️): Pide usar limpiaparabrisas, evitar frenadas bruscas y cuidado con el asfalto mojado. NUNCA sugieras gafas de sol aquí.\n- Si hay 80 a 99 (Tormenta ⛈️): ADVERTENCIA. Sugiere conducir con extrema precaución o hacer pausas.\n* NUNCA menciones los números de los códigos WMO al usuario.\n\nREGLAS DE VESTIMENTA POR TEMPERATURA (OBLIGATORIO incluir en los tips):\n- Menos de 10°C → recomienda abrigo grueso, bufanda y pantalón largo.\n- Entre 10°C y 17°C → recomienda chaqueta o suéter.\n- Entre 18°C y 25°C → recomienda ropa cómoda.\n- Más de 25°C → recomienda ropa ligera y fresca.\n- Si hay lluvia o tormenta → recomienda paraguas o impermeable.\n- Si hay viento fuerte → recomienda chaqueta cortavientos.\nSiempre basa la recomendación de vestimenta en la temperatura del ORIGEN y del DESTINO.\n\nREGLAS DE FORMATO:\n1. Usa SOLAMENTE etiquetas HTML <b>texto</b> para negritas. ESTÁ PROHIBIDO usar asteriscos (*).\n2. Sé cálido y directo.\n3. Resume la ruta en 2 líneas creando una pequeña historia del viaje.\n4. NUNCA uses saltos de línea con \\n. Usa ÚNICAMENTE etiquetas HTML: \n   <br> para saltos de línea y <b> para negritas.\n\nPLANTILLA ESTRICTA DE RESPUESTA:\n¡[Buenos días/tardes/noches] [Nombre]! 👋🚗\n\n<b>🌤️ El clima en tu ruta:</b>\n[Resumen narrativo y breve del clima y las temperaturas desde el origen hasta el destino]\n\n<b>🎒 Mis tips de copiloto para hoy:</b>\n- [Tip 1 lógico basado en el clima]\n- [Tip 2 lógico basado en el clima]\n- [Tip 3 lógico basado en el clima]\n\n¡Conduce con seguridad y disfruta el camino! 🛣️\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        2016,
+        -384
+      ],
+      "id": "8d15b158-f0fd-4a17-b75f-3ddc2b414774",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "name": "Seguir proceso",
+      "typeVersion": 1,
+      "position": [
+        1952,
+        -48
+      ],
+      "id": "9acc88fe-9b57-4e3f-8f9c-9d07c486abc8"
+    },
+    {
+      "parameters": {
+        "jsCode": "let entrada = $input.all()[0].json;\n\nlet rawData = entrada.body || entrada.data || entrada;\n\nlet parsedData;\nif (typeof rawData === 'string') {\n    parsedData = JSON.parse(rawData);\n} else {\n    parsedData = rawData; \n}\n\nlet rutaCompleta = parsedData.features[0].geometry.coordinates;\n\nlet totalPuntos = rutaCompleta.length;\nlet saltos = Math.floor(totalPuntos / 4);\nlet puntosClima = [];\n\npuntosClima.push({\n  json: {\n    nombre: \"Origen\",\n    longitud: rutaCompleta[0][0], \n    latitud: rutaCompleta[0][1]  \n  }\n});\n\npuntosClima.push({\n  json: {\n    nombre: \"Intermedio 1\",\n    longitud: rutaCompleta[saltos][0], \n    latitud: rutaCompleta[saltos][1] \n  }\n});\n\npuntosClima.push({\n  json: {\n    nombre: \"Intermedio 2\",\n    longitud: rutaCompleta[saltos * 2][0],\n    latitud: rutaCompleta[saltos * 2][1] \n  }\n});\n\npuntosClima.push({\n  json: {\n    nombre: \"Intermedio 3\",\n    longitud: rutaCompleta[saltos * 3][0], \n    latitud: rutaCompleta[saltos * 3][1] \n  }\n});\n\npuntosClima.push({\n  json: {\n    nombre: \"Destino\",\n    longitud: rutaCompleta[totalPuntos - 1][0],\n    latitud: rutaCompleta[totalPuntos - 1][1] \n  }\n});\n\nreturn puntosClima;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1232,
+        -64
+      ],
+      "id": "963e8f45-8c84-430e-8b65-34f705d22bde",
+      "name": "Obtener información especifica"
+    },
+    {
+      "parameters": {
+        "fieldsToAggregate": {
+          "fieldToAggregate": [
+            {
+              "fieldToAggregate": "current_weather.temperature",
+              "renameField": true,
+              "outputFieldName": "temperatura"
+            },
+            {
+              "fieldToAggregate": "current_weather.weathercode",
+              "renameField": true,
+              "outputFieldName": "codigo_clima"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        1584,
+        -384
+      ],
+      "id": "f1bbf06a-e9ef-4bf1-b645-4f8bc4bb9e57",
+      "name": "Agrupar datos"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "5ddb0265-c7e2-47f9-b64b-b94a914ab58c",
+              "name": "chatInput",
+              "value": "=Saludo a usar: {{ $now.setZone('America/Bogota').hour < 12 ? 'Buenos días' : $now.setZone('America/Bogota').hour < 19 ? 'Buenas tardes' : 'Buenas noches' }}\nNombre del conductor: Víctor\n\n--- DATOS DE LA RUTA ---\nTemperaturas: {{ $json.temperatura.join('°C, ') }}°C\nCódigos de clima: {{ $json.codigo_clima.join(', ') }}\n---\nGenera el reporte siguiendo estrictamente tu plantilla y reglas lógicas.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1808,
+        -384
+      ],
+      "id": "370c7a1f-eda9-4695-9298-e07873b54c8f",
+      "name": "Editar a chatinput"
+    },
+    {
+      "parameters": {
+        "chatId": "7926820081",
+        "text": "={{ $json.output }}",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2272,
+        -592
+      ],
+      "id": "5b055984-ed80-40c5-86d3-099f3dac4a19",
+      "name": "Enviar mensaje de recomendacion",
+      "webhookId": "cf95ef1d-b935-4054-b0d1-02ec49b29b97",
+      "alwaysOutputData": false,
+      "notesInFlow": false,
+      "executeOnce": false,
+      "retryOnFail": false,
+      "credentials": {
+        "telegramApi": {
+          "id": "nUTkZR8tA3gjOXVI",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "clima-ruta",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -160,
+        -16
+      ],
+      "id": "801d798c-9989-418e-95d1-4bccacd141ec",
+      "name": "Webhook",
+      "webhookId": "6011b413-d626-45ff-bd42-d2f20fcfe627"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        2368,
+        -384
+      ],
+      "id": "8523f707-eea3-40dc-8aa5-3430ca49945b",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        2016,
+        -208
+      ],
+      "id": "ea9355db-0f84-4ef0-8b6e-795dba2d9eac",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "BjbMIRQMSidh4swR",
+          "name": "Google Gemini(PaLM) Api account 2"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Nombrar variables": {
+      "main": [
+        [
+          {
+            "node": "Obtener origen",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Obtener destino",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Obtener Ruta Carro",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Obtener Ruta Moto",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Obtener Ruta A pie",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtener origen": {
+      "main": [
+        [
+          {
+            "node": "Unir obtención de coordenadas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtener destino": {
+      "main": [
+        [
+          {
+            "node": "Unir obtención de coordenadas",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Unir obtención de coordenadas": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtener Ruta Moto": {
+      "main": [
+        [
+          {
+            "node": "Obtener información especifica",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtener Ruta Carro": {
+      "main": [
+        [
+          {
+            "node": "Obtener información especifica",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtener Ruta A pie": {
+      "main": [
+        [
+          {
+            "node": "Obtener información especifica",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "Agrupar datos",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Consultar clima individual",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consultar clima individual": {
+      "main": [
+        [
+          {
+            "node": "Seguir proceso",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model": {
+      "ai_languageModel": [
+        []
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Seguir proceso": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtener información especifica": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agrupar datos": {
+      "main": [
+        [
+          {
+            "node": "Editar a chatinput",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Editar a chatinput": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Nombrar variables",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "ee080493-e740-4a62-a7a4-f111d8a4c50f",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "2f6606582d534ec8d255806f86b640ec391277baaca6e5105c7855169f0ed678"
+  },
+  "id": "E91wk5Fqs7W1MDmS",
+  "tags": []
+}
